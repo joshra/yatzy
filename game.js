@@ -946,6 +946,14 @@
     document.body.classList.toggle("is-player-two-turn", Boolean(isPlayerTwo));
   }
 
+  function hasGameStarted() {
+    return state.rolls > 0 || state.turnLog.length > 0 || state.gameOver;
+  }
+
+  function applyGameStartedState() {
+    document.body.classList.toggle("is-game-started", hasGameStarted());
+  }
+
   function renderPlayersBoard() {
     els.playersBoard.replaceChildren(
       ...state.players.map((player, index) => {
@@ -1049,9 +1057,11 @@
   }
 
   function renderModeButtons() {
+    const gameStarted = hasGameStarted();
     els.modeButtons.forEach((button) => {
       button.classList.toggle("is-active", button.dataset.mode === state.mode);
       button.setAttribute("aria-pressed", String(button.dataset.mode === state.mode));
+      button.disabled = gameStarted;
       button.textContent = modeLabel(button.dataset.mode);
     });
   }
@@ -1061,6 +1071,7 @@
     renderLanguageButtons();
     const player = currentPlayer();
     applyTurnTheme(player);
+    applyGameStartedState();
     const totals = calculateTotals(player.scores);
     const leader = leaderboard()[0];
     els.totalLabel.textContent = state.mode === "solo" ? uiText("total") : player.name;
@@ -1099,6 +1110,7 @@
       coordinate_system: "Turn-based score card; dice indexed left to right from 0 to 4.",
       language: state.language,
       mode: state.gameOver ? "game_over" : state.mode,
+      game_started: hasGameStarted(),
       current_player: {
         id: player.id,
         name: player.name,
