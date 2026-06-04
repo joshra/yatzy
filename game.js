@@ -34,9 +34,6 @@
         leader: "領先",
         rollDice: "擲骰",
         rollAgain: "再擲",
-        shakeRoll: "搖動",
-        shakeRollEnabled: "搖動已啟用",
-        shakeRollRequesting: "啟用中",
         cpuRolling: "CPU 擲骰中",
         restart: "重新開始",
         currentTurn: "目前回合",
@@ -91,9 +88,6 @@
         playerRoll: "{player}，請擲骰。",
         chooseScore: "選擇一列計分。",
         holdOrRoll: "保留骰子或再擲一次。",
-        shakeReady: "已啟用搖動擲骰。",
-        shakeUnsupported: "此裝置不支援搖動擲骰。",
-        shakePermissionDenied: "未允許動作感測器。",
         gameTie: "遊戲結束，{score} 分平手。",
         gameWinner: "遊戲結束，{player} 以 {score} 分獲勝。",
         cpuRolls: "{player} 擲第 {rolls} / 3 次。",
@@ -128,9 +122,6 @@
         leader: "Leader",
         rollDice: "Roll Dice",
         rollAgain: "Roll Again",
-        shakeRoll: "Shake",
-        shakeRollEnabled: "Shake On",
-        shakeRollRequesting: "Enabling",
         cpuRolling: "CPU Rolling",
         restart: "Restart",
         currentTurn: "Turn",
@@ -185,9 +176,6 @@
         playerRoll: "{player}, roll the dice.",
         chooseScore: "Choose a score row.",
         holdOrRoll: "Hold dice or roll again.",
-        shakeReady: "Shake to roll is on.",
-        shakeUnsupported: "Shake to roll is unavailable on this device.",
-        shakePermissionDenied: "Motion sensor access was not allowed.",
         gameTie: "Game over. Tie at {score}.",
         gameWinner: "Game over. {player} wins with {score}.",
         cpuRolls: "{player} rolls {rolls} / 3.",
@@ -222,9 +210,6 @@
         leader: "Ledare",
         rollDice: "Kasta",
         rollAgain: "Kasta igen",
-        shakeRoll: "Skaka",
-        shakeRollEnabled: "Skaka på",
-        shakeRollRequesting: "Aktiverar",
         cpuRolling: "Datorn kastar",
         restart: "Starta om",
         currentTurn: "Tur",
@@ -279,9 +264,6 @@
         playerRoll: "{player}, kasta tärningarna.",
         chooseScore: "Välj en poängrad.",
         holdOrRoll: "Spara tärningar eller kasta igen.",
-        shakeReady: "Skaka för att kasta är på.",
-        shakeUnsupported: "Skaka för att kasta stöds inte på den här enheten.",
-        shakePermissionDenied: "Åtkomst till rörelsesensor nekades.",
         gameTie: "Spelet är slut. Oavgjort på {score}.",
         gameWinner: "Spelet är slut. {player} vinner med {score}.",
         cpuRolls: "{player} kastar {rolls} / 3.",
@@ -317,11 +299,6 @@
   const categories = [...upperCategories, ...lowerCategories];
   const categoryMap = new Map(categories.map((category) => [category.id, category]));
   const bestScoreKey = "yatzy-best-score-v1";
-  const shakeRollConfig = {
-    minDelta: 21,
-    minRollIntervalMs: 900,
-    minSampleIntervalMs: 70,
-  };
   const diePips = {
     1: [5],
     2: [1, 9],
@@ -431,18 +408,6 @@
     pwaMessageKey: "",
     pwaMessageArgs: {},
     pwaVisible: false,
-    shakeRoll: {
-      enabled: false,
-      requesting: false,
-      listening: false,
-      messageKey: "",
-      messageArgs: {},
-      lastSampleAt: 0,
-      lastRollAt: 0,
-      x: null,
-      y: null,
-      z: null,
-    },
   };
 
   const els = {};
@@ -458,10 +423,6 @@
 
   function currentPwaMessage() {
     return state.pwaMessageKey ? messageText(state.pwaMessageKey, state.pwaMessageArgs) : "";
-  }
-
-  function currentMotionMessage() {
-    return state.shakeRoll.messageKey ? messageText(state.shakeRoll.messageKey, state.shakeRoll.messageArgs) : "";
   }
 
   function syncPlayerNames() {
@@ -730,115 +691,11 @@
 
   function rollDice() {
     if (!canHumanAct() || !rollCurrentDice()) {
-      return false;
+      return;
     }
 
     setMessage(state.rolls === 3 ? "chooseScore" : "holdOrRoll");
     render();
-    return true;
-  }
-
-  function supportsShakeRoll() {
-    return "DeviceMotionEvent" in window;
-  }
-
-  function setShakeRollStatus(messageKey, args = {}) {
-    state.shakeRoll.messageKey = messageKey;
-    state.shakeRoll.messageArgs = args;
-  }
-
-  function resetShakeSample() {
-    state.shakeRoll.lastSampleAt = 0;
-    state.shakeRoll.x = null;
-    state.shakeRoll.y = null;
-    state.shakeRoll.z = null;
-  }
-
-  function accelerationValue(value) {
-    return typeof value === "number" && Number.isFinite(value) ? value : 0;
-  }
-
-  function handleDeviceMotion(event) {
-    if (!state.shakeRoll.enabled) {
-      return;
-    }
-
-    const acceleration = event.accelerationIncludingGravity || event.acceleration;
-    if (!acceleration) {
-      return;
-    }
-
-    const x = accelerationValue(acceleration.x);
-    const y = accelerationValue(acceleration.y);
-    const z = accelerationValue(acceleration.z);
-    if (x === 0 && y === 0 && z === 0) {
-      return;
-    }
-
-    const now = performance.now();
-    if (state.shakeRoll.lastSampleAt && now - state.shakeRoll.lastSampleAt < shakeRollConfig.minSampleIntervalMs) {
-      return;
-    }
-
-    if (state.shakeRoll.x === null || state.shakeRoll.y === null || state.shakeRoll.z === null) {
-      state.shakeRoll.x = x;
-      state.shakeRoll.y = y;
-      state.shakeRoll.z = z;
-      state.shakeRoll.lastSampleAt = now;
-      return;
-    }
-
-    const delta = Math.abs(x - state.shakeRoll.x) + Math.abs(y - state.shakeRoll.y) + Math.abs(z - state.shakeRoll.z);
-    state.shakeRoll.x = x;
-    state.shakeRoll.y = y;
-    state.shakeRoll.z = z;
-    state.shakeRoll.lastSampleAt = now;
-
-    if (delta < shakeRollConfig.minDelta || now - state.shakeRoll.lastRollAt < shakeRollConfig.minRollIntervalMs) {
-      return;
-    }
-
-    state.shakeRoll.lastRollAt = now;
-    if (rollDice() && typeof navigator.vibrate === "function") {
-      navigator.vibrate(24);
-    }
-  }
-
-  function startShakeRoll() {
-    if (!state.shakeRoll.listening) {
-      window.addEventListener("devicemotion", handleDeviceMotion);
-      state.shakeRoll.listening = true;
-    }
-    state.shakeRoll.enabled = true;
-    resetShakeSample();
-    setShakeRollStatus("shakeReady");
-  }
-
-  async function enableShakeRoll() {
-    if (!supportsShakeRoll()) {
-      setShakeRollStatus("shakeUnsupported");
-      render();
-      return;
-    }
-
-    state.shakeRoll.requesting = true;
-    render();
-
-    try {
-      if (typeof window.DeviceMotionEvent.requestPermission === "function") {
-        const permission = await window.DeviceMotionEvent.requestPermission();
-        if (permission !== "granted") {
-          setShakeRollStatus("shakePermissionDenied");
-          return;
-        }
-      }
-      startShakeRoll();
-    } catch (error) {
-      setShakeRollStatus("shakePermissionDenied");
-    } finally {
-      state.shakeRoll.requesting = false;
-      render();
-    }
   }
 
   function toggleHold(index) {
@@ -1209,24 +1066,6 @@
     });
   }
 
-  function renderShakeRollControls() {
-    if (!els.shakeButton || !els.motionStatus) {
-      return;
-    }
-
-    els.shakeButton.hidden = !supportsShakeRoll();
-    els.shakeButton.disabled = state.shakeRoll.enabled || state.shakeRoll.requesting;
-    els.shakeButton.textContent = state.shakeRoll.requesting
-      ? uiText("shakeRollRequesting")
-      : state.shakeRoll.enabled
-      ? uiText("shakeRollEnabled")
-      : uiText("shakeRoll");
-    els.shakeButton.setAttribute("aria-pressed", String(state.shakeRoll.enabled));
-
-    els.motionStatus.hidden = !state.shakeRoll.messageKey;
-    els.motionStatus.textContent = currentMotionMessage();
-  }
-
   function render() {
     applyStaticText();
     renderLanguageButtons();
@@ -1249,7 +1088,6 @@
     els.rollButton.textContent = player.type === "cpu" ? uiText("cpuRolling") : state.rolls === 0 ? uiText("rollDice") : uiText("rollAgain");
     els.restartButton.textContent = uiText("restart");
     els.diceTray.replaceChildren(...state.dice.map((value, index) => renderDie(value, index)));
-    renderShakeRollControls();
     renderModeButtons();
     renderPlayersBoard();
     renderScoreTable();
@@ -1320,7 +1158,6 @@
 
   function bindEvents() {
     els.rollButton.addEventListener("click", rollDice);
-    els.shakeButton.addEventListener("click", enableShakeRoll);
     els.restartButton.addEventListener("click", restartGame);
     els.modeButtons.forEach((button) => {
       button.addEventListener("click", () => setMode(button.dataset.mode));
@@ -1388,7 +1225,6 @@
     els.playersBoard = document.getElementById("players-board");
     els.turnLog = document.getElementById("turn-log");
     els.rollButton = document.getElementById("roll-button");
-    els.shakeButton = document.getElementById("shake-button");
     els.restartButton = document.getElementById("restart-button");
     els.modeButtons = [...document.querySelectorAll(".mode-button")];
     els.languageSwitcher = document.querySelector(".language-switcher");
@@ -1403,7 +1239,6 @@
     els.remainingCount = document.getElementById("remaining-count");
     els.bonusState = document.getElementById("bonus-state");
     els.turnMessage = document.getElementById("turn-message");
-    els.motionStatus = document.getElementById("motion-status");
     els.pwaStatus = document.getElementById("pwa-status");
 
     bindEvents();
