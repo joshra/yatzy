@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Yatzy icon">
+  <rect width="192" height="192" rx="34" fill="#2f6f5e"/>
+  <rect x="34" y="34" width="124" height="124" rx="22" fill="#fffaf0" stroke="#d9962d" stroke-width="8"/>
+  <circle cx="67" cy="67" r="9" fill="#18221f"/>
+  <circle cx="125" cy="67" r="9" fill="#18221f"/>
+  <circle cx="96" cy="96" r="9" fill="#18221f"/>
+  <circle cx="67" cy="125" r="9" fill="#18221f"/>
+  <circle cx="125" cy="125" r="9" fill="#18221f"/>
+</svg>

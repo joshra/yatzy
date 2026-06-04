@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#2f6f5e">
+    <meta name="description" content="A Nordic Yatzy PWA game with solo, computer opponent, and CPU match modes.">
+    <title>Yatzy</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/yatzy-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/yatzy-maskable.svg">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell" aria-labelledby="game-title">
+      <section class="game-panel" aria-label="Yatzy board">
+        <header class="top-bar">
+          <div>
+            <p class="eyebrow">Nordic Yatzy</p>
+            <h1 id="game-title">Yatzy</h1>
+          </div>
+          <div class="score-summary" aria-label="Score summary">
+            <div>
+              <span id="total-label">Total</span>
+              <strong id="total-score">0</strong>
+            </div>
+            <div>
+              <span id="secondary-label">Best</span>
+              <strong id="best-score">0</strong>
+            </div>
+          </div>
+        </header>
+
+        <section class="play-area" aria-label="Dice controls">
+          <div class="mode-tabs" aria-label="Game mode">
+            <button class="mode-button is-active" type="button" data-mode="solo">Solo</button>
+            <button class="mode-button" type="button" data-mode="vsComputer">Vs Computer</button>
+            <button class="mode-button" type="button" data-mode="watch">Watch CPUs</button>
+          </div>
+
+          <div id="players-board" class="players-board" aria-label="Players"></div>
+
+          <div class="turn-meter">
+            <div>
+              <span class="label">Rolls</span>
+              <strong id="roll-count">0 / 3</strong>
+            </div>
+            <div>
+              <span class="label">Remaining</span>
+              <strong id="remaining-count">15</strong>
+            </div>
+            <div>
+              <span class="label">Bonus</span>
+              <strong id="bonus-state">0 / 50</strong>
+            </div>
+          </div>
+
+          <div id="dice-tray" class="dice-tray" aria-label="Dice"></div>
+
+          <div class="actions">
+            <button id="roll-button" class="primary-action" type="button">Roll Dice</button>
+            <button id="auto-button" class="ghost-action" type="button" hidden>Pause</button>
+            <button id="restart-button" class="ghost-action" type="button">Restart</button>
+          </div>
+
+          <p id="turn-message" class="turn-message" role="status" aria-live="polite"></p>
+          <div id="turn-log" class="turn-log" aria-label="Recent turns"></div>
+          <p id="pwa-status" class="pwa-status" role="status" aria-live="polite" hidden></p>
+        </section>
+      </section>
+
+      <section class="score-card" aria-label="Score card">
+        <div class="score-card-header">
+          <div>
+            <h2>Score Card</h2>
+            <p id="score-card-subtitle">You</p>
+          </div>
+          <div>
+            <span>Upper</span>
+            <strong id="upper-score">0</strong>
+          </div>
+        </div>
+        <div id="score-table" class="score-table"></div>
+      </section>
+    </main>
+
+    <script src="game.js" defer></script>
+  </body>
+</html>

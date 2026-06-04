@@ -1,0 +1,37 @@
+{
+  "name": "Yatzy",
+  "short_name": "Yatzy",
+  "description": "A single-player Nordic Yatzy game.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3efe5",
+  "theme_color": "#2f6f5e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/yatzy-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/yatzy-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/yatzy-icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/yatzy-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
