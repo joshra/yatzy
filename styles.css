@@ -69,9 +69,47 @@ button {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  align-items: start;
   padding: 22px 26px 18px;
   background: linear-gradient(135deg, var(--accent), #5a7b57);
   color: #fffaf0;
+}
+
+.title-stack {
+  min-width: 0;
+}
+
+.top-controls {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+  min-width: 230px;
+}
+
+.language-switcher {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 6px;
+  max-width: 100%;
+}
+
+.language-button {
+  min-height: 30px;
+  border: 1px solid rgba(255, 250, 240, 0.36);
+  border-radius: 8px;
+  padding: 0 9px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fffaf0;
+  font-size: 0.72rem;
+  font-weight: 850;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.language-button.is-active {
+  border-color: #fffaf0;
+  background: #fffaf0;
+  color: var(--accent-dark);
 }
 
 .eyebrow {
@@ -270,12 +308,12 @@ h2 {
 }
 
 .die.is-held::after {
-  content: "HELD";
+  content: attr(data-held-label);
   position: absolute;
   left: 50%;
   bottom: -9px;
   transform: translateX(-50%);
-  min-width: 44px;
+  min-width: 34px;
   border-radius: 999px;
   padding: 2px 7px;
   background: var(--accent-dark);
@@ -283,6 +321,7 @@ h2 {
   font-size: 0.63rem;
   font-weight: 900;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .die-face {
@@ -552,6 +591,20 @@ h2 {
   .score-summary,
   .turn-meter {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .top-controls {
+    min-width: 0;
+    justify-items: stretch;
+  }
+
+  .language-switcher {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .language-button {
+    min-width: 0;
+    padding: 0 6px;
   }
 
   .score-summary {

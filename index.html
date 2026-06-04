@@ -13,49 +13,56 @@
   </head>
   <body>
     <main class="app-shell" aria-labelledby="game-title">
-      <section class="game-panel" aria-label="Yatzy board">
+      <section class="game-panel" aria-label="Yatzy board" data-i18n-aria-label="boardLabel">
         <header class="top-bar">
-          <div>
-            <p class="eyebrow">Nordic Yatzy</p>
-            <h1 id="game-title">Yatzy</h1>
+          <div class="title-stack">
+            <p class="eyebrow" data-i18n="eyebrow">Nordic Yatzy</p>
+            <h1 id="game-title" data-i18n="title">Yatzy</h1>
           </div>
-          <div class="score-summary" aria-label="Score summary">
-            <div>
-              <span id="total-label">Total</span>
-              <strong id="total-score">0</strong>
+          <div class="top-controls">
+            <div class="language-switcher" aria-label="Language" data-i18n-aria-label="languageSelectorLabel">
+              <button class="language-button" type="button" data-lang="zh-Hant" lang="zh-Hant">繁中</button>
+              <button class="language-button" type="button" data-lang="en" lang="en">English</button>
+              <button class="language-button" type="button" data-lang="sv" lang="sv">Svenska</button>
             </div>
-            <div>
-              <span id="secondary-label">Best</span>
-              <strong id="best-score">0</strong>
+            <div class="score-summary" aria-label="Score summary" data-i18n-aria-label="scoreSummaryLabel">
+              <div>
+                <span id="total-label">Total</span>
+                <strong id="total-score">0</strong>
+              </div>
+              <div>
+                <span id="secondary-label">Best</span>
+                <strong id="best-score">0</strong>
+              </div>
             </div>
           </div>
         </header>
 
-        <section class="play-area" aria-label="Dice controls">
-          <div class="mode-tabs" aria-label="Game mode">
+        <section class="play-area" aria-label="Dice controls" data-i18n-aria-label="playAreaLabel">
+          <div class="mode-tabs" aria-label="Game mode" data-i18n-aria-label="modeTabsLabel">
             <button class="mode-button is-active" type="button" data-mode="solo">Solo</button>
             <button class="mode-button" type="button" data-mode="vsComputer">Vs Computer</button>
             <button class="mode-button" type="button" data-mode="watch">Watch CPUs</button>
           </div>
 
-          <div id="players-board" class="players-board" aria-label="Players"></div>
+          <div id="players-board" class="players-board" aria-label="Players" data-i18n-aria-label="playersLabel"></div>
 
           <div class="turn-meter">
             <div>
-              <span class="label">Rolls</span>
+              <span class="label" data-i18n="rollsLabel">Rolls</span>
               <strong id="roll-count">0 / 3</strong>
             </div>
             <div>
-              <span class="label">Remaining</span>
+              <span class="label" data-i18n="remainingLabel">Remaining</span>
               <strong id="remaining-count">15</strong>
             </div>
             <div>
-              <span class="label">Bonus</span>
+              <span class="label" data-i18n="bonusLabel">Bonus</span>
               <strong id="bonus-state">0 / 50</strong>
             </div>
           </div>
 
-          <div id="dice-tray" class="dice-tray" aria-label="Dice"></div>
+          <div id="dice-tray" class="dice-tray" aria-label="Dice" data-i18n-aria-label="diceLabel"></div>
 
           <div class="actions">
             <button id="roll-button" class="primary-action" type="button">Roll Dice</button>
@@ -64,19 +71,19 @@
           </div>
 
           <p id="turn-message" class="turn-message" role="status" aria-live="polite"></p>
-          <div id="turn-log" class="turn-log" aria-label="Recent turns"></div>
+          <div id="turn-log" class="turn-log" aria-label="Recent turns" data-i18n-aria-label="recentTurnsLabel"></div>
           <p id="pwa-status" class="pwa-status" role="status" aria-live="polite" hidden></p>
         </section>
       </section>
 
-      <section class="score-card" aria-label="Score card">
+      <section class="score-card" aria-label="Score card" data-i18n-aria-label="scoreCardLabel">
         <div class="score-card-header">
           <div>
-            <h2>Score Card</h2>
+            <h2 data-i18n="scoreCardTitle">Score Card</h2>
             <p id="score-card-subtitle">You</p>
           </div>
           <div>
-            <span>Upper</span>
+            <span data-i18n="upperLabel">Upper</span>
             <strong id="upper-score">0</strong>
           </div>
         </div>

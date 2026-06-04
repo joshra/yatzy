@@ -1,25 +1,311 @@
 (function () {
   "use strict";
 
+  const languageKey = "yatzy-language-v1";
+  const languageOptions = [
+    { id: "zh-Hant", htmlLang: "zh-Hant", label: "繁中" },
+    { id: "en", htmlLang: "en", label: "English" },
+    { id: "sv", htmlLang: "sv", label: "Svenska" },
+  ];
+
+  const translations = {
+    "zh-Hant": {
+      ui: {
+        pageTitle: "Yatzy",
+        metaDescription: "支援單人、對戰電腦與觀看電腦對戰模式的北歐 Yatzy PWA 遊戲。",
+        title: "Yatzy",
+        eyebrow: "北歐 Yatzy",
+        boardLabel: "Yatzy 遊戲板",
+        scoreSummaryLabel: "分數摘要",
+        languageSelectorLabel: "語言",
+        playAreaLabel: "骰子控制",
+        modeTabsLabel: "遊戲模式",
+        playersLabel: "玩家",
+        rollsLabel: "擲骰",
+        remainingLabel: "剩餘",
+        bonusLabel: "獎勵",
+        diceLabel: "骰子",
+        recentTurnsLabel: "最近回合",
+        scoreCardLabel: "計分卡",
+        scoreCardTitle: "計分卡",
+        upperLabel: "上半區",
+        total: "總分",
+        best: "最高分",
+        leader: "領先",
+        rollDice: "擲骰",
+        rollAgain: "再擲",
+        cpuRolling: "CPU 擲骰中",
+        pause: "暫停",
+        resume: "繼續",
+        restart: "重新開始",
+        upperSection: "上半區",
+        lowerSection: "下半區",
+        scoreAction: "計分",
+        setAction: "已填",
+        cpuAction: "CPU",
+        held: "保留",
+        dieAria: "骰子 {index}：{value}{held}{cpuTurn}",
+        dieHeldSuffix: "，已保留",
+        dieCpuSuffix: "，CPU 回合",
+        scoreAria: "將 {category} 計分",
+        noScoreYet: "尚未得分",
+        remainingCount: "剩餘 {remaining} 項",
+      },
+      modes: {
+        solo: "單人",
+        vsComputer: "對戰電腦",
+        watch: "觀看電腦",
+      },
+      playerNames: {
+        you: "你",
+        cpu: "電腦",
+        cpuA: "電腦 A",
+        cpuB: "電腦 B",
+      },
+      playerTypes: {
+        human: "玩家",
+        cpu: "CPU",
+      },
+      categories: {
+        ones: { label: "一點", hint: "所有一點骰總和" },
+        twos: { label: "二點", hint: "所有二點骰總和" },
+        threes: { label: "三點", hint: "所有三點骰總和" },
+        fours: { label: "四點", hint: "所有四點骰總和" },
+        fives: { label: "五點", hint: "所有五點骰總和" },
+        sixes: { label: "六點", hint: "所有六點骰總和" },
+        onePair: { label: "一對", hint: "最高的一組對子" },
+        twoPairs: { label: "兩對", hint: "兩組不同對子" },
+        threeKind: { label: "三條", hint: "三顆相同骰子" },
+        fourKind: { label: "四條", hint: "四顆相同骰子" },
+        smallStraight: { label: "小順", hint: "1, 2, 3, 4, 5" },
+        largeStraight: { label: "大順", hint: "2, 3, 4, 5, 6" },
+        fullHouse: { label: "葫蘆", hint: "一對加三條" },
+        chance: { label: "機會", hint: "所有骰子總和" },
+        yatzy: { label: "Yatzy", hint: "五顆相同骰子" },
+      },
+      messages: {
+        start: "擲骰開始。",
+        watchStart: "正在觀看 {player} 開始。",
+        cpuThinking: "{player} 正在思考。",
+        playerRoll: "{player}，請擲骰。",
+        chooseScore: "選擇一列計分。",
+        holdOrRoll: "保留骰子或再擲一次。",
+        gameTie: "遊戲結束，{score} 分平手。",
+        gameWinner: "遊戲結束，{player} 以 {score} 分獲勝。",
+        cpuRolls: "{player} 擲第 {rolls} / 3 次。",
+        cpuContinues: "{player} 繼續。",
+        cpuPaused: "CPU 對戰已暫停。",
+        pwaReadyInstall: "可從瀏覽器選單安裝。",
+        offlineReady: "已可離線遊玩。",
+        offlineUnavailable: "此瀏覽器無法離線遊玩。",
+        installedOffline: "已安裝，可離線遊玩。",
+      },
+    },
+    en: {
+      ui: {
+        pageTitle: "Yatzy",
+        metaDescription: "A Nordic Yatzy PWA game with solo, computer opponent, and CPU match modes.",
+        title: "Yatzy",
+        eyebrow: "Nordic Yatzy",
+        boardLabel: "Yatzy board",
+        scoreSummaryLabel: "Score summary",
+        languageSelectorLabel: "Language",
+        playAreaLabel: "Dice controls",
+        modeTabsLabel: "Game mode",
+        playersLabel: "Players",
+        rollsLabel: "Rolls",
+        remainingLabel: "Remaining",
+        bonusLabel: "Bonus",
+        diceLabel: "Dice",
+        recentTurnsLabel: "Recent turns",
+        scoreCardLabel: "Score card",
+        scoreCardTitle: "Score Card",
+        upperLabel: "Upper",
+        total: "Total",
+        best: "Best",
+        leader: "Leader",
+        rollDice: "Roll Dice",
+        rollAgain: "Roll Again",
+        cpuRolling: "CPU Rolling",
+        pause: "Pause",
+        resume: "Resume",
+        restart: "Restart",
+        upperSection: "Upper section",
+        lowerSection: "Lower section",
+        scoreAction: "Score",
+        setAction: "Set",
+        cpuAction: "CPU",
+        held: "HELD",
+        dieAria: "Die {index}: {value}{held}{cpuTurn}",
+        dieHeldSuffix: ", held",
+        dieCpuSuffix: ", CPU turn",
+        scoreAria: "Score {category}",
+        noScoreYet: "No score yet",
+        remainingCount: "{remaining} left",
+      },
+      modes: {
+        solo: "Solo",
+        vsComputer: "Vs Computer",
+        watch: "Watch CPUs",
+      },
+      playerNames: {
+        you: "You",
+        cpu: "Computer",
+        cpuA: "CPU A",
+        cpuB: "CPU B",
+      },
+      playerTypes: {
+        human: "Player",
+        cpu: "CPU",
+      },
+      categories: {
+        ones: { label: "Ones", hint: "Sum of all ones" },
+        twos: { label: "Twos", hint: "Sum of all twos" },
+        threes: { label: "Threes", hint: "Sum of all threes" },
+        fours: { label: "Fours", hint: "Sum of all fours" },
+        fives: { label: "Fives", hint: "Sum of all fives" },
+        sixes: { label: "Sixes", hint: "Sum of all sixes" },
+        onePair: { label: "One Pair", hint: "Highest matching pair" },
+        twoPairs: { label: "Two Pairs", hint: "Two different pairs" },
+        threeKind: { label: "Three of a Kind", hint: "Three matching dice" },
+        fourKind: { label: "Four of a Kind", hint: "Four matching dice" },
+        smallStraight: { label: "Small Straight", hint: "1, 2, 3, 4, 5" },
+        largeStraight: { label: "Large Straight", hint: "2, 3, 4, 5, 6" },
+        fullHouse: { label: "Full House", hint: "One pair and one three-kind" },
+        chance: { label: "Chance", hint: "Sum of all dice" },
+        yatzy: { label: "Yatzy", hint: "Five matching dice" },
+      },
+      messages: {
+        start: "Roll the dice to start.",
+        watchStart: "Watching {player} start.",
+        cpuThinking: "{player} is thinking.",
+        playerRoll: "{player}, roll the dice.",
+        chooseScore: "Choose a score row.",
+        holdOrRoll: "Hold dice or roll again.",
+        gameTie: "Game over. Tie at {score}.",
+        gameWinner: "Game over. {player} wins with {score}.",
+        cpuRolls: "{player} rolls {rolls} / 3.",
+        cpuContinues: "{player} continues.",
+        cpuPaused: "CPU match paused.",
+        pwaReadyInstall: "Ready to install from your browser menu.",
+        offlineReady: "Offline play is ready.",
+        offlineUnavailable: "Offline play is unavailable in this browser.",
+        installedOffline: "Installed for offline play.",
+      },
+    },
+    sv: {
+      ui: {
+        pageTitle: "Yatzy",
+        metaDescription: "Ett nordiskt Yatzy-PWA-spel med solo, datormotståndare och CPU-match.",
+        title: "Yatzy",
+        eyebrow: "Nordisk Yatzy",
+        boardLabel: "Yatzy-bräde",
+        scoreSummaryLabel: "Poängsammanfattning",
+        languageSelectorLabel: "Språk",
+        playAreaLabel: "Tärningskontroller",
+        modeTabsLabel: "Spelläge",
+        playersLabel: "Spelare",
+        rollsLabel: "Kast",
+        remainingLabel: "Kvar",
+        bonusLabel: "Bonus",
+        diceLabel: "Tärningar",
+        recentTurnsLabel: "Senaste rundorna",
+        scoreCardLabel: "Poängkort",
+        scoreCardTitle: "Poängkort",
+        upperLabel: "Övre",
+        total: "Totalt",
+        best: "Rekord",
+        leader: "Ledare",
+        rollDice: "Kasta",
+        rollAgain: "Kasta igen",
+        cpuRolling: "Datorn kastar",
+        pause: "Pausa",
+        resume: "Fortsätt",
+        restart: "Starta om",
+        upperSection: "Övre sektion",
+        lowerSection: "Nedre sektion",
+        scoreAction: "Sätt",
+        setAction: "Satt",
+        cpuAction: "CPU",
+        held: "SPARAD",
+        dieAria: "Tärning {index}: {value}{held}{cpuTurn}",
+        dieHeldSuffix: ", sparad",
+        dieCpuSuffix: ", CPU-tur",
+        scoreAria: "Sätt poäng i {category}",
+        noScoreYet: "Ingen poäng ännu",
+        remainingCount: "{remaining} kvar",
+      },
+      modes: {
+        solo: "Solo",
+        vsComputer: "Mot datorn",
+        watch: "Datorer spelar",
+      },
+      playerNames: {
+        you: "Du",
+        cpu: "Datorn",
+        cpuA: "Dator A",
+        cpuB: "Dator B",
+      },
+      playerTypes: {
+        human: "Spelare",
+        cpu: "CPU",
+      },
+      categories: {
+        ones: { label: "Ettor", hint: "Summan av alla ettor" },
+        twos: { label: "Tvåor", hint: "Summan av alla tvåor" },
+        threes: { label: "Treor", hint: "Summan av alla treor" },
+        fours: { label: "Fyror", hint: "Summan av alla fyror" },
+        fives: { label: "Femmor", hint: "Summan av alla femmor" },
+        sixes: { label: "Sexor", hint: "Summan av alla sexor" },
+        onePair: { label: "Ett par", hint: "Högsta paret" },
+        twoPairs: { label: "Två par", hint: "Två olika par" },
+        threeKind: { label: "Tretal", hint: "Tre lika tärningar" },
+        fourKind: { label: "Fyrtal", hint: "Fyra lika tärningar" },
+        smallStraight: { label: "Liten stege", hint: "1, 2, 3, 4, 5" },
+        largeStraight: { label: "Stor stege", hint: "2, 3, 4, 5, 6" },
+        fullHouse: { label: "Kåk", hint: "Ett par och ett tretal" },
+        chance: { label: "Chans", hint: "Summan av alla tärningar" },
+        yatzy: { label: "Yatzy", hint: "Fem lika tärningar" },
+      },
+      messages: {
+        start: "Kasta tärningarna för att börja.",
+        watchStart: "Du tittar på när {player} börjar.",
+        cpuThinking: "{player} tänker.",
+        playerRoll: "{player}, kasta tärningarna.",
+        chooseScore: "Välj en poängrad.",
+        holdOrRoll: "Spara tärningar eller kasta igen.",
+        gameTie: "Spelet är slut. Oavgjort på {score}.",
+        gameWinner: "Spelet är slut. {player} vinner med {score}.",
+        cpuRolls: "{player} kastar {rolls} / 3.",
+        cpuContinues: "{player} fortsätter.",
+        cpuPaused: "CPU-matchen är pausad.",
+        pwaReadyInstall: "Redo att installera via webbläsarmenyn.",
+        offlineReady: "Offlinespel är klart.",
+        offlineUnavailable: "Offlinespel stöds inte i den här webbläsaren.",
+        installedOffline: "Installerad för offlinespel.",
+      },
+    },
+  };
+
   const upperCategories = [
-    { id: "ones", label: "Ones", hint: "Sum of all ones", face: 1 },
-    { id: "twos", label: "Twos", hint: "Sum of all twos", face: 2 },
-    { id: "threes", label: "Threes", hint: "Sum of all threes", face: 3 },
-    { id: "fours", label: "Fours", hint: "Sum of all fours", face: 4 },
-    { id: "fives", label: "Fives", hint: "Sum of all fives", face: 5 },
-    { id: "sixes", label: "Sixes", hint: "Sum of all sixes", face: 6 },
+    { id: "ones", face: 1 },
+    { id: "twos", face: 2 },
+    { id: "threes", face: 3 },
+    { id: "fours", face: 4 },
+    { id: "fives", face: 5 },
+    { id: "sixes", face: 6 },
   ];
 
   const lowerCategories = [
-    { id: "onePair", label: "One Pair", hint: "Highest matching pair" },
-    { id: "twoPairs", label: "Two Pairs", hint: "Two different pairs" },
-    { id: "threeKind", label: "Three of a Kind", hint: "Three matching dice" },
-    { id: "fourKind", label: "Four of a Kind", hint: "Four matching dice" },
-    { id: "smallStraight", label: "Small Straight", hint: "1, 2, 3, 4, 5" },
-    { id: "largeStraight", label: "Large Straight", hint: "2, 3, 4, 5, 6" },
-    { id: "fullHouse", label: "Full House", hint: "One pair and one three-kind" },
-    { id: "chance", label: "Chance", hint: "Sum of all dice" },
-    { id: "yatzy", label: "Yatzy", hint: "Five matching dice" },
+    { id: "onePair" },
+    { id: "twoPairs" },
+    { id: "threeKind" },
+    { id: "fourKind" },
+    { id: "smallStraight" },
+    { id: "largeStraight" },
+    { id: "fullHouse" },
+    { id: "chance" },
+    { id: "yatzy" },
   ];
 
   const categories = [...upperCategories, ...lowerCategories];
@@ -34,7 +320,89 @@
     6: [1, 3, 4, 6, 7, 9],
   };
 
+  function normalizeLanguage(language) {
+    const value = String(language || "").toLowerCase();
+    if (value.startsWith("zh")) {
+      return "zh-Hant";
+    }
+    if (value.startsWith("sv")) {
+      return "sv";
+    }
+    if (value.startsWith("en")) {
+      return "en";
+    }
+    return null;
+  }
+
+  function getInitialLanguage() {
+    const stored = normalizeLanguage(localStorage.getItem(languageKey));
+    if (stored) {
+      return stored;
+    }
+
+    const browserLanguages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+    for (const language of browserLanguages) {
+      const normalized = normalizeLanguage(language);
+      if (normalized) {
+        return normalized;
+      }
+    }
+
+    return "en";
+  }
+
+  function activeCopy() {
+    return translations[state.language] || translations.en;
+  }
+
+  function uiText(key) {
+    const copy = activeCopy();
+    return copy.ui[key] || translations.en.ui[key] || key;
+  }
+
+  function formatText(template, values = {}) {
+    return String(template).replace(/\{(\w+)\}/g, (match, key) => (values[key] === undefined ? match : values[key]));
+  }
+
+  function playerName(playerId) {
+    const copy = activeCopy();
+    return copy.playerNames[playerId] || translations.en.playerNames[playerId] || playerId;
+  }
+
+  function playerTypeLabel(type) {
+    const copy = activeCopy();
+    return copy.playerTypes[type] || translations.en.playerTypes[type] || type;
+  }
+
+  function categoryCopy(categoryId) {
+    const copy = activeCopy();
+    return copy.categories[categoryId] || translations.en.categories[categoryId] || { label: categoryId, hint: "" };
+  }
+
+  function categoryLabel(categoryId) {
+    return categoryCopy(categoryId).label;
+  }
+
+  function categoryHint(categoryId) {
+    return categoryCopy(categoryId).hint;
+  }
+
+  function modeLabel(mode) {
+    const copy = activeCopy();
+    return copy.modes[mode] || translations.en.modes[mode] || mode;
+  }
+
+  function messageText(key, args = {}) {
+    const copy = activeCopy();
+    const values = { ...args };
+    if (values.playerId) {
+      values.player = playerName(values.playerId);
+    }
+    return formatText(copy.messages[key] || translations.en.messages[key] || key, values);
+  }
+
   const state = {
+    language: getInitialLanguage(),
     mode: "solo",
     players: [],
     currentPlayerIndex: 0,
@@ -42,18 +410,80 @@
     held: [false, false, false, false, false],
     rolls: 0,
     gameOver: false,
-    message: "Roll the dice to start.",
+    messageKey: "start",
+    messageArgs: {},
     turnLog: [],
     bestScore: Number(localStorage.getItem(bestScoreKey) || 0),
     autoPlaying: false,
     autoTimer: null,
     cpuDelay: 620,
     installPrompt: null,
-    pwaMessage: "",
+    pwaMessageKey: "",
+    pwaMessageArgs: {},
     pwaVisible: false,
   };
 
   const els = {};
+
+  function setMessage(key, args = {}) {
+    state.messageKey = key;
+    state.messageArgs = args;
+  }
+
+  function currentMessage() {
+    return messageText(state.messageKey, state.messageArgs);
+  }
+
+  function currentPwaMessage() {
+    return state.pwaMessageKey ? messageText(state.pwaMessageKey, state.pwaMessageArgs) : "";
+  }
+
+  function syncPlayerNames() {
+    state.players.forEach((player) => {
+      player.name = playerName(player.id);
+    });
+  }
+
+  function applyStaticText() {
+    const option = languageOptions.find((entry) => entry.id === state.language) || languageOptions[1];
+    document.documentElement.lang = option.htmlLang;
+    document.title = uiText("pageTitle");
+
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute("content", uiText("metaDescription"));
+    }
+
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+      element.textContent = uiText(element.dataset.i18n);
+    });
+
+    document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+      element.setAttribute("aria-label", uiText(element.dataset.i18nAriaLabel));
+    });
+  }
+
+  function renderLanguageButtons() {
+    els.languageButtons.forEach((button) => {
+      const selected = button.dataset.lang === state.language;
+      const option = languageOptions.find((entry) => entry.id === button.dataset.lang);
+      button.textContent = option ? option.label : button.dataset.lang;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function setLanguage(languageId) {
+    if (!translations[languageId] || state.language === languageId) {
+      return;
+    }
+    state.language = languageId;
+    localStorage.setItem(languageKey, languageId);
+    syncPlayerNames();
+    if (els.rollButton) {
+      render();
+    }
+  }
 
   function emptyScores() {
     return Object.fromEntries(categories.map((category) => [category.id, null]));
@@ -234,7 +664,11 @@
     const ranked = leaderboard();
     const winner = ranked[0];
     const tie = ranked.filter((entry) => entry.totals.total === winner.totals.total).length > 1;
-    state.message = tie ? `Game over. Tie at ${winner.totals.total}.` : `Game over. ${winner.player.name} wins with ${winner.totals.total}.`;
+    if (tie) {
+      setMessage("gameTie", { score: winner.totals.total });
+    } else {
+      setMessage("gameWinner", { playerId: winner.player.id, score: winner.totals.total });
+    }
 
     const human = state.players.find((player) => player.type === "human");
     if (human) {
@@ -255,7 +689,7 @@
     const nextIndex = nextPlayablePlayerIndex();
     resetTurnFor(nextIndex);
     const player = currentPlayer();
-    state.message = player.type === "cpu" ? `${player.name} is thinking.` : `${player.name}, roll the dice.`;
+    setMessage(player.type === "cpu" ? "cpuThinking" : "playerRoll", { playerId: player.id });
   }
 
   function rollCurrentDice() {
@@ -273,7 +707,7 @@
       return;
     }
 
-    state.message = state.rolls === 3 ? "Choose a score row." : "Hold dice or roll again.";
+    setMessage(state.rolls === 3 ? "chooseScore" : "holdOrRoll");
     render();
   }
 
@@ -292,16 +726,14 @@
       return false;
     }
 
-    const category = categoryMap.get(categoryId);
     const score = scoreDice(categoryId, state.dice);
     player.scores[categoryId] = score;
     player.lastTurn = {
       categoryId,
-      label: category.label,
       score,
       dice: [...state.dice],
     };
-    state.turnLog.unshift(`${player.name}: ${category.label} +${score}`);
+    state.turnLog.unshift({ playerId: player.id, categoryId, score });
     state.turnLog = state.turnLog.slice(0, 5);
     advanceAfterScore();
     return true;
@@ -431,7 +863,7 @@
 
     if (state.rolls < 3) {
       rollCurrentDice();
-      state.message = `${player.name} rolls ${state.rolls} / 3.`;
+      setMessage("cpuRolls", { playerId: player.id, rolls: state.rolls });
       render();
       scheduleCpuStep();
       return;
@@ -445,14 +877,14 @@
 
   function setupPlayers(mode) {
     if (mode === "vsComputer") {
-      return [createPlayer("you", "You", "human"), createPlayer("cpu", "Computer", "cpu")];
+      return [createPlayer("you", playerName("you"), "human"), createPlayer("cpu", playerName("cpu"), "cpu")];
     }
 
     if (mode === "watch") {
-      return [createPlayer("cpuA", "CPU A", "cpu"), createPlayer("cpuB", "CPU B", "cpu")];
+      return [createPlayer("cpuA", playerName("cpuA"), "cpu"), createPlayer("cpuB", playerName("cpuB"), "cpu")];
     }
 
-    return [createPlayer("you", "You", "human")];
+    return [createPlayer("you", playerName("you"), "human")];
   }
 
   function restartGame() {
@@ -463,7 +895,7 @@
     state.gameOver = false;
     state.autoPlaying = state.mode === "watch";
     resetTurnFor(0);
-    state.message = state.mode === "watch" ? "Watching CPU A start." : "Roll the dice to start.";
+    setMessage(state.mode === "watch" ? "watchStart" : "start", state.mode === "watch" ? { playerId: "cpuA" } : {});
     render();
     scheduleCpuStep(520);
   }
@@ -481,7 +913,7 @@
       return;
     }
     state.autoPlaying = !state.autoPlaying;
-    state.message = state.autoPlaying ? `${currentPlayer().name} continues.` : "CPU match paused.";
+    setMessage(state.autoPlaying ? "cpuContinues" : "cpuPaused", state.autoPlaying ? { playerId: currentPlayer().id } : {});
     render();
     scheduleCpuStep(420);
   }
@@ -492,9 +924,15 @@
     button.type = "button";
     button.className = `die${state.held[index] ? " is-held" : ""}`;
     button.disabled = !canHumanAct() || state.rolls === 0;
+    button.dataset.heldLabel = uiText("held");
     button.setAttribute(
       "aria-label",
-      `Die ${index + 1}: ${value}${state.held[index] ? ", held" : ""}${player && player.type === "cpu" ? ", CPU turn" : ""}`
+      formatText(uiText("dieAria"), {
+        index: index + 1,
+        value,
+        held: state.held[index] ? uiText("dieHeldSuffix") : "",
+        cpuTurn: player && player.type === "cpu" ? uiText("dieCpuSuffix") : "",
+      })
     );
     button.setAttribute("aria-pressed", String(state.held[index]));
     button.dataset.index = String(index);
@@ -523,15 +961,19 @@
 
         const title = document.createElement("div");
         title.className = "player-title";
-        title.innerHTML = `<strong>${player.name}</strong><span>${player.type === "cpu" ? "CPU" : "Player"}</span>`;
+        title.innerHTML = `<strong>${player.name}</strong><span>${playerTypeLabel(player.type)}</span>`;
 
         const score = document.createElement("div");
         score.className = "player-score";
-        score.innerHTML = `<strong>${totals.total}</strong><span>${totals.remaining} left</span>`;
+        score.innerHTML = `<strong>${totals.total}</strong><span>${formatText(uiText("remainingCount"), {
+          remaining: totals.remaining,
+        })}</span>`;
 
         const last = document.createElement("p");
         last.className = "player-last";
-        last.textContent = player.lastTurn ? `${player.lastTurn.label} +${player.lastTurn.score}` : "No score yet";
+        last.textContent = player.lastTurn
+          ? `${categoryLabel(player.lastTurn.categoryId)} +${player.lastTurn.score}`
+          : uiText("noScoreYet");
 
         card.append(title, score, last);
         return card;
@@ -544,7 +986,8 @@
     els.turnLog.replaceChildren(
       ...state.turnLog.map((entry) => {
         const item = document.createElement("p");
-        item.textContent = entry;
+        item.textContent =
+          typeof entry === "string" ? entry : `${playerName(entry.playerId)}: ${categoryLabel(entry.categoryId)} +${entry.score}`;
         return item;
       })
     );
@@ -558,7 +1001,7 @@
 
     const name = document.createElement("div");
     name.className = "score-name";
-    name.innerHTML = `<strong>${category.label}</strong><span>${category.hint}</span>`;
+    name.innerHTML = `<strong>${categoryLabel(category.id)}</strong><span>${categoryHint(category.id)}</span>`;
 
     const value = document.createElement("div");
     value.className = "score-value";
@@ -569,8 +1012,8 @@
     button.className = `score-button${filled ? " is-filled" : ""}`;
     button.disabled = filled || state.rolls === 0 || !canHumanAct();
     button.dataset.category = category.id;
-    button.textContent = filled ? "Set" : player.type === "cpu" ? "CPU" : "Score";
-    button.setAttribute("aria-label", `Score ${category.label}`);
+    button.textContent = filled ? uiText("setAction") : player.type === "cpu" ? uiText("cpuAction") : uiText("scoreAction");
+    button.setAttribute("aria-label", formatText(uiText("scoreAria"), { category: categoryLabel(category.id) }));
 
     row.append(name, value, button);
     return row;
@@ -581,13 +1024,13 @@
 
     const upperHeader = document.createElement("div");
     upperHeader.className = "score-row is-section";
-    upperHeader.textContent = "Upper section";
+    upperHeader.textContent = uiText("upperSection");
     els.scoreTable.appendChild(upperHeader);
     upperCategories.forEach((category) => els.scoreTable.appendChild(renderScoreRow(category)));
 
     const lowerHeader = document.createElement("div");
     lowerHeader.className = "score-row is-section";
-    lowerHeader.textContent = "Lower section";
+    lowerHeader.textContent = uiText("lowerSection");
     els.scoreTable.appendChild(lowerHeader);
     lowerCategories.forEach((category) => els.scoreTable.appendChild(renderScoreRow(category)));
   }
@@ -596,28 +1039,32 @@
     els.modeButtons.forEach((button) => {
       button.classList.toggle("is-active", button.dataset.mode === state.mode);
       button.setAttribute("aria-pressed", String(button.dataset.mode === state.mode));
+      button.textContent = modeLabel(button.dataset.mode);
     });
   }
 
   function render() {
+    applyStaticText();
+    renderLanguageButtons();
     const player = currentPlayer();
     const totals = calculateTotals(player.scores);
     const leader = leaderboard()[0];
-    els.totalLabel.textContent = state.mode === "solo" ? "Total" : player.name;
+    els.totalLabel.textContent = state.mode === "solo" ? uiText("total") : player.name;
     els.totalScore.textContent = String(totals.total);
-    els.secondaryLabel.textContent = state.mode === "solo" ? "Best" : "Leader";
+    els.secondaryLabel.textContent = state.mode === "solo" ? uiText("best") : uiText("leader");
     els.bestScore.textContent = state.mode === "solo" ? String(state.bestScore) : String(leader.totals.total);
     els.upperScore.textContent = String(totals.upper);
     els.scoreCardSubtitle.textContent = player.name;
     els.rollCount.textContent = `${state.rolls} / 3`;
     els.remainingCount.textContent = String(totals.remaining);
     els.bonusState.textContent = `${totals.bonus} / 50`;
-    els.turnMessage.textContent = state.message;
+    els.turnMessage.textContent = currentMessage();
     els.rollButton.disabled = !canHumanAct() || state.rolls >= 3;
-    els.rollButton.textContent = player.type === "cpu" ? "CPU Rolling" : state.rolls === 0 ? "Roll Dice" : "Roll Again";
+    els.rollButton.textContent = player.type === "cpu" ? uiText("cpuRolling") : state.rolls === 0 ? uiText("rollDice") : uiText("rollAgain");
     els.autoButton.hidden = state.mode !== "watch";
-    els.autoButton.textContent = state.autoPlaying ? "Pause" : "Resume";
+    els.autoButton.textContent = state.autoPlaying ? uiText("pause") : uiText("resume");
     els.autoButton.disabled = state.gameOver;
+    els.restartButton.textContent = uiText("restart");
     els.diceTray.replaceChildren(...state.dice.map((value, index) => renderDie(value, index)));
     renderModeButtons();
     renderPlayersBoard();
@@ -625,7 +1072,7 @@
     renderTurnLog();
 
     els.pwaStatus.hidden = !state.pwaVisible;
-    els.pwaStatus.textContent = state.pwaMessage;
+    els.pwaStatus.textContent = currentPwaMessage();
   }
 
   function renderGameToText() {
@@ -639,6 +1086,7 @@
 
     return JSON.stringify({
       coordinate_system: "Turn-based score card; dice indexed left to right from 0 to 4.",
+      language: state.language,
       mode: state.gameOver ? "game_over" : state.mode,
       current_player: {
         id: player.id,
@@ -656,12 +1104,19 @@
         type: entry.type,
         scores: entry.scores,
         totals: calculateTotals(entry.scores),
-        last_turn: entry.lastTurn,
+        last_turn: entry.lastTurn
+          ? {
+              ...entry.lastTurn,
+              label: categoryLabel(entry.lastTurn.categoryId),
+            }
+          : null,
       })),
       available_scores: availableScores,
       totals,
-      turn_log: state.turnLog,
-      message: state.message,
+      turn_log: state.turnLog.map((entry) =>
+        typeof entry === "string" ? entry : `${playerName(entry.playerId)}: ${categoryLabel(entry.categoryId)} +${entry.score}`
+      ),
+      message: currentMessage(),
     });
   }
 
@@ -671,6 +1126,9 @@
     els.autoButton.addEventListener("click", toggleAutoPlay);
     els.modeButtons.forEach((button) => {
       button.addEventListener("click", () => setMode(button.dataset.mode));
+    });
+    els.languageButtons.forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
     });
     els.diceTray.addEventListener("click", (event) => {
       const die = event.target.closest(".die");
@@ -686,8 +1144,9 @@
     });
   }
 
-  function setPwaStatus(message, visible = true) {
-    state.pwaMessage = message;
+  function setPwaStatus(messageKey, visible = true, args = {}) {
+    state.pwaMessageKey = messageKey;
+    state.pwaMessageArgs = args;
     state.pwaVisible = visible;
     if (els.pwaStatus) {
       render();
@@ -702,27 +1161,27 @@
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
       state.installPrompt = event;
-      setPwaStatus("Ready to install from your browser menu.");
+      setPwaStatus("pwaReadyInstall");
     });
 
     navigator.serviceWorker
       .register("service-worker.js")
       .then((registration) => {
         if (registration.active) {
-          setPwaStatus("Offline play is ready.");
+          setPwaStatus("offlineReady");
         }
       })
       .catch(() => {
-        setPwaStatus("Offline play is unavailable in this browser.", true);
+        setPwaStatus("offlineUnavailable", true);
       });
 
     navigator.serviceWorker.ready.then(() => {
-      setPwaStatus("Offline play is ready.");
+      setPwaStatus("offlineReady");
     });
 
     window.addEventListener("appinstalled", () => {
       state.installPrompt = null;
-      setPwaStatus("Installed for offline play.");
+      setPwaStatus("installedOffline");
     });
   }
 
@@ -735,6 +1194,7 @@
     els.restartButton = document.getElementById("restart-button");
     els.autoButton = document.getElementById("auto-button");
     els.modeButtons = [...document.querySelectorAll(".mode-button")];
+    els.languageButtons = [...document.querySelectorAll(".language-button")];
     els.totalLabel = document.getElementById("total-label");
     els.secondaryLabel = document.getElementById("secondary-label");
     els.totalScore = document.getElementById("total-score");
@@ -767,7 +1227,13 @@
     calculateTotals,
     chooseCpuCategory,
     chooseCpuHolds,
-    categories: categories.map((category) => ({ id: category.id, label: category.label })),
+    setLanguage,
+    get language() {
+      return state.language;
+    },
+    get categories() {
+      return categories.map((category) => ({ id: category.id, label: categoryLabel(category.id) }));
+    },
   };
 
   document.addEventListener("DOMContentLoaded", init);
