@@ -1,7 +1,7 @@
 {
   "name": "Yatzy",
   "short_name": "Yatzy",
-  "description": "A Nordic Yatzy game with solo, computer opponent, and CPU match modes.",
+  "description": "A Nordic Yatzy game with solo, computer opponent, and two-player modes.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

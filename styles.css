@@ -9,6 +9,15 @@
   --accent: #2f6f5e;
   --accent-dark: #214f43;
   --accent-soft: #dcece6;
+  --player-one: #2f6f5e;
+  --player-one-dark: #214f43;
+  --player-one-soft: #dcece6;
+  --player-two: #9c3b3b;
+  --player-two-dark: #6d2929;
+  --player-two-soft: #f1dddd;
+  --turn-accent: var(--player-one);
+  --turn-accent-dark: var(--player-one-dark);
+  --turn-soft: var(--player-one-soft);
   --gold: #d9962d;
   --danger: #9c3b3b;
   --shadow: 0 20px 60px rgba(44, 51, 47, 0.16);
@@ -31,6 +40,18 @@ body {
     linear-gradient(315deg, rgba(217, 150, 45, 0.18), transparent 36%),
     var(--bg);
   color: var(--ink);
+}
+
+body.is-player-one-turn {
+  --turn-accent: var(--player-one);
+  --turn-accent-dark: var(--player-one-dark);
+  --turn-soft: var(--player-one-soft);
+}
+
+body.is-player-two-turn {
+  --turn-accent: var(--player-two);
+  --turn-accent-dark: var(--player-two-dark);
+  --turn-soft: var(--player-two-soft);
 }
 
 button {
@@ -94,7 +115,7 @@ button {
 }
 
 .language-button {
-  min-height: 30px;
+  min-height: 36px;
   border: 1px solid rgba(255, 250, 240, 0.36);
   border-radius: 8px;
   padding: 0 9px;
@@ -103,6 +124,8 @@ button {
   font-size: 0.72rem;
   font-weight: 850;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(255, 250, 240, 0.22);
   white-space: nowrap;
 }
 
@@ -208,16 +231,41 @@ h2 {
 }
 
 .player-card {
+  position: relative;
+  overflow: hidden;
   min-height: 98px;
   border: 1px solid var(--line);
+  border-left: 6px solid var(--player-accent, var(--accent));
   border-radius: 8px;
   padding: 10px;
   background: var(--paper);
+  transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.player-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--player-accent, var(--accent));
+}
+
+.player-card.is-player-one {
+  --player-accent: var(--player-one);
+  --player-accent-dark: var(--player-one-dark);
+  --player-soft: var(--player-one-soft);
+}
+
+.player-card.is-player-two {
+  --player-accent: var(--player-two);
+  --player-accent-dark: var(--player-two-dark);
+  --player-soft: var(--player-two-soft);
 }
 
 .player-card.is-active {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
+  border-color: var(--player-accent);
+  background: linear-gradient(135deg, var(--player-soft), var(--paper) 72%);
+  box-shadow: inset 0 0 0 1px var(--player-accent), 0 10px 24px rgba(24, 34, 31, 0.13);
 }
 
 .player-title,
@@ -240,6 +288,22 @@ h2 {
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.player-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.player-turn-pill {
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: var(--player-accent-dark);
+  color: #fff;
+  font-size: 0.67rem;
+  line-height: 1;
 }
 
 .player-score {
@@ -298,13 +362,13 @@ h2 {
 .die:not(:disabled):hover,
 .die:focus-visible {
   transform: translateY(-2px);
-  border-color: var(--accent);
+  border-color: var(--turn-accent);
   outline: none;
 }
 
 .die.is-held {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: var(--turn-accent);
+  background: var(--turn-soft);
 }
 
 .die.is-held::after {
@@ -316,7 +380,7 @@ h2 {
   min-width: 34px;
   border-radius: 999px;
   padding: 2px 7px;
-  background: var(--accent-dark);
+  background: var(--turn-accent-dark);
   color: #fff;
   font-size: 0.63rem;
   font-weight: 900;
@@ -395,12 +459,12 @@ h2 {
 }
 
 .primary-action {
-  background: var(--accent);
+  background: var(--turn-accent);
   color: #fff;
 }
 
 .primary-action:not(:disabled):hover {
-  background: var(--accent-dark);
+  background: var(--turn-accent-dark);
 }
 
 .ghost-action {
@@ -503,6 +567,7 @@ h2 {
 
 .score-row.is-filled {
   background: rgba(220, 236, 230, 0.55);
+  background: color-mix(in srgb, var(--turn-soft) 54%, white);
 }
 
 .score-row.is-section {
@@ -545,7 +610,7 @@ h2 {
 }
 
 .score-button:not(:disabled):hover {
-  background: var(--accent);
+  background: var(--turn-accent);
 }
 
 .score-button.is-filled {
@@ -603,6 +668,7 @@ h2 {
   }
 
   .language-button {
+    min-height: 42px;
     min-width: 0;
     padding: 0 6px;
   }

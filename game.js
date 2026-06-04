@@ -12,7 +12,7 @@
     "zh-Hant": {
       ui: {
         pageTitle: "Yatzy",
-        metaDescription: "支援單人、對戰電腦與觀看電腦對戰模式的北歐 Yatzy PWA 遊戲。",
+        metaDescription: "支援單人、對戰電腦與雙人對戰模式的北歐 Yatzy PWA 遊戲。",
         title: "Yatzy",
         eyebrow: "北歐 Yatzy",
         boardLabel: "Yatzy 遊戲板",
@@ -35,9 +35,8 @@
         rollDice: "擲骰",
         rollAgain: "再擲",
         cpuRolling: "CPU 擲骰中",
-        pause: "暫停",
-        resume: "繼續",
         restart: "重新開始",
+        currentTurn: "目前回合",
         upperSection: "上半區",
         lowerSection: "下半區",
         scoreAction: "計分",
@@ -54,13 +53,13 @@
       modes: {
         solo: "單人",
         vsComputer: "對戰電腦",
-        watch: "觀看電腦",
+        twoPlayer: "雙人對戰",
       },
       playerNames: {
         you: "你",
+        player1: "玩家 1",
+        player2: "玩家 2",
         cpu: "電腦",
-        cpuA: "電腦 A",
-        cpuB: "電腦 B",
       },
       playerTypes: {
         human: "玩家",
@@ -85,7 +84,6 @@
       },
       messages: {
         start: "擲骰開始。",
-        watchStart: "正在觀看 {player} 開始。",
         cpuThinking: "{player} 正在思考。",
         playerRoll: "{player}，請擲骰。",
         chooseScore: "選擇一列計分。",
@@ -93,8 +91,6 @@
         gameTie: "遊戲結束，{score} 分平手。",
         gameWinner: "遊戲結束，{player} 以 {score} 分獲勝。",
         cpuRolls: "{player} 擲第 {rolls} / 3 次。",
-        cpuContinues: "{player} 繼續。",
-        cpuPaused: "CPU 對戰已暫停。",
         pwaReadyInstall: "可從瀏覽器選單安裝。",
         offlineReady: "已可離線遊玩。",
         offlineUnavailable: "此瀏覽器無法離線遊玩。",
@@ -104,7 +100,7 @@
     en: {
       ui: {
         pageTitle: "Yatzy",
-        metaDescription: "A Nordic Yatzy PWA game with solo, computer opponent, and CPU match modes.",
+        metaDescription: "A Nordic Yatzy PWA game with solo, computer opponent, and two-player modes.",
         title: "Yatzy",
         eyebrow: "Nordic Yatzy",
         boardLabel: "Yatzy board",
@@ -127,9 +123,8 @@
         rollDice: "Roll Dice",
         rollAgain: "Roll Again",
         cpuRolling: "CPU Rolling",
-        pause: "Pause",
-        resume: "Resume",
         restart: "Restart",
+        currentTurn: "Turn",
         upperSection: "Upper section",
         lowerSection: "Lower section",
         scoreAction: "Score",
@@ -146,13 +141,13 @@
       modes: {
         solo: "Solo",
         vsComputer: "Vs Computer",
-        watch: "Watch CPUs",
+        twoPlayer: "Two Players",
       },
       playerNames: {
         you: "You",
+        player1: "Player 1",
+        player2: "Player 2",
         cpu: "Computer",
-        cpuA: "CPU A",
-        cpuB: "CPU B",
       },
       playerTypes: {
         human: "Player",
@@ -177,7 +172,6 @@
       },
       messages: {
         start: "Roll the dice to start.",
-        watchStart: "Watching {player} start.",
         cpuThinking: "{player} is thinking.",
         playerRoll: "{player}, roll the dice.",
         chooseScore: "Choose a score row.",
@@ -185,8 +179,6 @@
         gameTie: "Game over. Tie at {score}.",
         gameWinner: "Game over. {player} wins with {score}.",
         cpuRolls: "{player} rolls {rolls} / 3.",
-        cpuContinues: "{player} continues.",
-        cpuPaused: "CPU match paused.",
         pwaReadyInstall: "Ready to install from your browser menu.",
         offlineReady: "Offline play is ready.",
         offlineUnavailable: "Offline play is unavailable in this browser.",
@@ -196,7 +188,7 @@
     sv: {
       ui: {
         pageTitle: "Yatzy",
-        metaDescription: "Ett nordiskt Yatzy-PWA-spel med solo, datormotståndare och CPU-match.",
+        metaDescription: "Ett nordiskt Yatzy-PWA-spel med solo, datormotståndare och tvåspelarläge.",
         title: "Yatzy",
         eyebrow: "Nordisk Yatzy",
         boardLabel: "Yatzy-bräde",
@@ -219,9 +211,8 @@
         rollDice: "Kasta",
         rollAgain: "Kasta igen",
         cpuRolling: "Datorn kastar",
-        pause: "Pausa",
-        resume: "Fortsätt",
         restart: "Starta om",
+        currentTurn: "Tur",
         upperSection: "Övre sektion",
         lowerSection: "Nedre sektion",
         scoreAction: "Sätt",
@@ -238,13 +229,13 @@
       modes: {
         solo: "Solo",
         vsComputer: "Mot datorn",
-        watch: "Datorer spelar",
+        twoPlayer: "Två spelare",
       },
       playerNames: {
         you: "Du",
+        player1: "Spelare 1",
+        player2: "Spelare 2",
         cpu: "Datorn",
-        cpuA: "Dator A",
-        cpuB: "Dator B",
       },
       playerTypes: {
         human: "Spelare",
@@ -269,7 +260,6 @@
       },
       messages: {
         start: "Kasta tärningarna för att börja.",
-        watchStart: "Du tittar på när {player} börjar.",
         cpuThinking: "{player} tänker.",
         playerRoll: "{player}, kasta tärningarna.",
         chooseScore: "Välj en poängrad.",
@@ -277,8 +267,6 @@
         gameTie: "Spelet är slut. Oavgjort på {score}.",
         gameWinner: "Spelet är slut. {player} vinner med {score}.",
         cpuRolls: "{player} kastar {rolls} / 3.",
-        cpuContinues: "{player} fortsätter.",
-        cpuPaused: "CPU-matchen är pausad.",
         pwaReadyInstall: "Redo att installera via webbläsarmenyn.",
         offlineReady: "Offlinespel är klart.",
         offlineUnavailable: "Offlinespel stöds inte i den här webbläsaren.",
@@ -414,7 +402,6 @@
     messageArgs: {},
     turnLog: [],
     bestScore: Number(localStorage.getItem(bestScoreKey) || 0),
-    autoPlaying: false,
     autoTimer: null,
     cpuDelay: 620,
     installPrompt: null,
@@ -626,7 +613,7 @@
 
   function shouldCpuRun() {
     const player = currentPlayer();
-    return !state.gameOver && player && player.type === "cpu" && (state.mode === "vsComputer" || state.autoPlaying);
+    return !state.gameOver && player && player.type === "cpu" && state.mode === "vsComputer";
   }
 
   function scheduleCpuStep(delay = state.cpuDelay) {
@@ -880,8 +867,8 @@
       return [createPlayer("you", playerName("you"), "human"), createPlayer("cpu", playerName("cpu"), "cpu")];
     }
 
-    if (mode === "watch") {
-      return [createPlayer("cpuA", playerName("cpuA"), "cpu"), createPlayer("cpuB", playerName("cpuB"), "cpu")];
+    if (mode === "twoPlayer") {
+      return [createPlayer("player1", playerName("player1"), "human"), createPlayer("player2", playerName("player2"), "human")];
     }
 
     return [createPlayer("you", playerName("you"), "human")];
@@ -893,29 +880,18 @@
     state.currentPlayerIndex = 0;
     state.turnLog = [];
     state.gameOver = false;
-    state.autoPlaying = state.mode === "watch";
     resetTurnFor(0);
-    setMessage(state.mode === "watch" ? "watchStart" : "start", state.mode === "watch" ? { playerId: "cpuA" } : {});
+    setMessage("playerRoll", { playerId: currentPlayer().id });
     render();
     scheduleCpuStep(520);
   }
 
   function setMode(mode) {
-    if (!["solo", "vsComputer", "watch"].includes(mode) || state.mode === mode) {
+    if (!["solo", "vsComputer", "twoPlayer"].includes(mode) || state.mode === mode) {
       return;
     }
     state.mode = mode;
     restartGame();
-  }
-
-  function toggleAutoPlay() {
-    if (state.mode !== "watch" || state.gameOver) {
-      return;
-    }
-    state.autoPlaying = !state.autoPlaying;
-    setMessage(state.autoPlaying ? "cpuContinues" : "cpuPaused", state.autoPlaying ? { playerId: currentPlayer().id } : {});
-    render();
-    scheduleCpuStep(420);
   }
 
   function renderDie(value, index) {
@@ -952,16 +928,53 @@
     return state.rolls > 0 ? scoreDice(categoryId, state.dice) : "-";
   }
 
+  function playerAccentClass(playerId) {
+    if (playerId === "you" || playerId === "player1") {
+      return "is-player-one";
+    }
+
+    if (playerId === "cpu" || playerId === "player2") {
+      return "is-player-two";
+    }
+
+    return "is-player-neutral";
+  }
+
+  function applyTurnTheme(player) {
+    const isPlayerTwo = player && (player.id === "cpu" || player.id === "player2");
+    document.body.classList.toggle("is-player-one-turn", !isPlayerTwo);
+    document.body.classList.toggle("is-player-two-turn", Boolean(isPlayerTwo));
+  }
+
   function renderPlayersBoard() {
     els.playersBoard.replaceChildren(
       ...state.players.map((player, index) => {
         const totals = calculateTotals(player.scores);
+        const isActive = index === state.currentPlayerIndex;
         const card = document.createElement("div");
-        card.className = `player-card${index === state.currentPlayerIndex ? " is-active" : ""}`;
+        card.className = `player-card ${playerAccentClass(player.id)}${isActive ? " is-active" : ""}`;
 
         const title = document.createElement("div");
         title.className = "player-title";
-        title.innerHTML = `<strong>${player.name}</strong><span>${playerTypeLabel(player.type)}</span>`;
+
+        const name = document.createElement("strong");
+        name.textContent = player.name;
+
+        const meta = document.createElement("span");
+        meta.className = "player-meta";
+
+        const type = document.createElement("span");
+        type.textContent = playerTypeLabel(player.type);
+        meta.appendChild(type);
+
+        if (isActive) {
+          const turn = document.createElement("span");
+          turn.className = "player-turn-pill";
+          turn.textContent = uiText("currentTurn");
+          meta.appendChild(turn);
+        }
+
+        title.append(name, meta);
 
         const score = document.createElement("div");
         score.className = "player-score";
@@ -1047,6 +1060,7 @@
     applyStaticText();
     renderLanguageButtons();
     const player = currentPlayer();
+    applyTurnTheme(player);
     const totals = calculateTotals(player.scores);
     const leader = leaderboard()[0];
     els.totalLabel.textContent = state.mode === "solo" ? uiText("total") : player.name;
@@ -1061,9 +1075,6 @@
     els.turnMessage.textContent = currentMessage();
     els.rollButton.disabled = !canHumanAct() || state.rolls >= 3;
     els.rollButton.textContent = player.type === "cpu" ? uiText("cpuRolling") : state.rolls === 0 ? uiText("rollDice") : uiText("rollAgain");
-    els.autoButton.hidden = state.mode !== "watch";
-    els.autoButton.textContent = state.autoPlaying ? uiText("pause") : uiText("resume");
-    els.autoButton.disabled = state.gameOver;
     els.restartButton.textContent = uiText("restart");
     els.diceTray.replaceChildren(...state.dice.map((value, index) => renderDie(value, index)));
     renderModeButtons();
@@ -1093,7 +1104,6 @@
         name: player.name,
         type: player.type,
       },
-      auto_playing: state.autoPlaying,
       dice: state.dice,
       held: state.held,
       rolls: state.rolls,
@@ -1120,16 +1130,28 @@
     });
   }
 
+  function handleLanguageSelection(event) {
+    const target = event.target instanceof Element ? event.target : null;
+    const button = target ? target.closest(".language-button") : null;
+    if (!button || !els.languageSwitcher || !els.languageSwitcher.contains(button)) {
+      return;
+    }
+
+    if (event.type === "touchend") {
+      event.preventDefault();
+    }
+
+    setLanguage(button.dataset.lang);
+  }
+
   function bindEvents() {
     els.rollButton.addEventListener("click", rollDice);
     els.restartButton.addEventListener("click", restartGame);
-    els.autoButton.addEventListener("click", toggleAutoPlay);
     els.modeButtons.forEach((button) => {
       button.addEventListener("click", () => setMode(button.dataset.mode));
     });
-    els.languageButtons.forEach((button) => {
-      button.addEventListener("click", () => setLanguage(button.dataset.lang));
-    });
+    els.languageSwitcher.addEventListener("click", handleLanguageSelection);
+    els.languageSwitcher.addEventListener("touchend", handleLanguageSelection, { passive: false });
     els.diceTray.addEventListener("click", (event) => {
       const die = event.target.closest(".die");
       if (die) {
@@ -1192,8 +1214,8 @@
     els.turnLog = document.getElementById("turn-log");
     els.rollButton = document.getElementById("roll-button");
     els.restartButton = document.getElementById("restart-button");
-    els.autoButton = document.getElementById("auto-button");
     els.modeButtons = [...document.querySelectorAll(".mode-button")];
+    els.languageSwitcher = document.querySelector(".language-switcher");
     els.languageButtons = [...document.querySelectorAll(".language-button")];
     els.totalLabel = document.getElementById("total-label");
     els.secondaryLabel = document.getElementById("secondary-label");

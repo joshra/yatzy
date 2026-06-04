@@ -1,9 +1,9 @@
-const CACHE_NAME = "yatzy-pwa-v6";
+const CACHE_NAME = "yatzy-pwa-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./game.js",
+  "./styles.css?v=7",
+  "./game.js?v=7",
   "./manifest.webmanifest",
   "./icons/yatzy-icon-192.png",
   "./icons/yatzy-icon-512.png",
