@@ -34,6 +34,7 @@
         leader: "領先",
         rollDice: "擲骰",
         rollAgain: "再擲",
+        rollingDice: "滾動中",
         cpuRolling: "CPU 擲骰中",
         restart: "重新開始",
         currentTurn: "目前回合",
@@ -122,6 +123,7 @@
         leader: "Leader",
         rollDice: "Roll Dice",
         rollAgain: "Roll Again",
+        rollingDice: "Rolling",
         cpuRolling: "CPU Rolling",
         restart: "Restart",
         currentTurn: "Turn",
@@ -210,6 +212,7 @@
         leader: "Ledare",
         rollDice: "Kasta",
         rollAgain: "Kasta igen",
+        rollingDice: "Rullar",
         cpuRolling: "Datorn kastar",
         restart: "Starta om",
         currentTurn: "Tur",
@@ -408,6 +411,12 @@
     pwaMessageKey: "",
     pwaMessageArgs: {},
     pwaVisible: false,
+    rollAnimation: null,
+    rollInput: {
+      pointerId: null,
+      key: "",
+      suppressClickUntil: 0,
+    },
   };
 
   const els = {};
@@ -599,6 +608,121 @@
     return Math.floor(Math.random() * 6) + 1;
   }
 
+  function isRollAnimating() {
+    return Boolean(state.rollAnimation);
+  }
+
+  function nextVisualDie(currentValue) {
+    const next = randomDie();
+    return next === currentValue ? (next % 6) + 1 : next;
+  }
+
+  function clearRollAnimation() {
+    if (!state.rollAnimation) {
+      return;
+    }
+
+    cancelAnimationFrame(state.rollAnimation.rafId);
+    state.rollAnimation = null;
+    state.rollInput.pointerId = null;
+    state.rollInput.key = "";
+  }
+
+  function scheduleRollStops(effect, now = performance.now()) {
+    if (!effect || effect.releaseRequested) {
+      return;
+    }
+
+    effect.releaseRequested = true;
+    const movingIndexes = state.dice.map((_, index) => index).filter((index) => !effect.held[index]);
+    const stopOrder = movingIndexes.sort(() => Math.random() - 0.5);
+    const releaseBase = Math.max(now, effect.startTime + 220) + 360;
+
+    stopOrder.forEach((index, orderIndex) => {
+      const stagger = 90 * orderIndex + 24 * index + Math.random() * 80;
+      effect.stopAt[index] = releaseBase + stagger;
+    });
+  }
+
+  function finishDiceRoll() {
+    const effect = state.rollAnimation;
+    if (!effect) {
+      return;
+    }
+
+    cancelAnimationFrame(effect.rafId);
+    state.rollAnimation = null;
+    state.rollInput.pointerId = null;
+    state.rollInput.key = "";
+    state.rolls += 1;
+    setMessage(state.rolls === 3 ? "chooseScore" : "holdOrRoll");
+    render();
+  }
+
+  function stepDiceRoll(timestamp) {
+    const effect = state.rollAnimation;
+    if (!effect) {
+      return;
+    }
+
+    let changed = false;
+    state.dice.forEach((value, index) => {
+      if (effect.held[index] || effect.stopped[index]) {
+        return;
+      }
+
+      if (effect.releaseRequested && timestamp >= effect.stopAt[index]) {
+        state.dice[index] = effect.finalDice[index];
+        effect.stopped[index] = true;
+        changed = true;
+        return;
+      }
+
+      const tickEvery = 52 + index * 7;
+      if (timestamp - effect.lastSpinAt[index] >= tickEvery) {
+        state.dice[index] = nextVisualDie(value);
+        effect.lastSpinAt[index] = timestamp;
+        changed = true;
+      }
+    });
+
+    if (changed) {
+      render();
+    }
+
+    if (effect.releaseRequested && effect.stopped.every(Boolean)) {
+      finishDiceRoll();
+      return;
+    }
+
+    effect.rafId = requestAnimationFrame(stepDiceRoll);
+  }
+
+  function startHumanRoll() {
+    if (!canHumanAct() || state.rolls >= 3 || isRollAnimating()) {
+      return false;
+    }
+
+    const now = performance.now();
+    state.rollAnimation = {
+      held: [...state.held],
+      startTime: now,
+      releaseRequested: false,
+      finalDice: state.dice.map((value, index) => (state.held[index] ? value : randomDie())),
+      stopped: state.dice.map((_, index) => state.held[index]),
+      stopAt: state.dice.map(() => Infinity),
+      lastSpinAt: state.dice.map(() => now - 120),
+      rafId: 0,
+    };
+    state.rollAnimation.rafId = requestAnimationFrame(stepDiceRoll);
+    render();
+    return true;
+  }
+
+  function releaseHumanRoll() {
+    scheduleRollStops(state.rollAnimation);
+  }
+
   function clearCpuTimer() {
     if (state.autoTimer) {
       clearTimeout(state.autoTimer);
@@ -648,6 +772,7 @@
   function finishGame() {
     state.gameOver = true;
     clearCpuTimer();
+    clearRollAnimation();
     const ranked = leaderboard();
     const winner = ranked[0];
     const tie = ranked.filter((entry) => entry.totals.total === winner.totals.total).length > 1;
@@ -690,16 +815,15 @@
   }
 
   function rollDice() {
-    if (!canHumanAct() || !rollCurrentDice()) {
+    if (!startHumanRoll()) {
       return;
     }
 
-    setMessage(state.rolls === 3 ? "chooseScore" : "holdOrRoll");
-    render();
+    releaseHumanRoll();
   }
 
   function toggleHold(index) {
-    if (!canHumanAct() || state.rolls === 0) {
+    if (!canHumanAct() || state.rolls === 0 || isRollAnimating()) {
       return;
     }
 
@@ -727,7 +851,7 @@
   }
 
   function scoreCategory(categoryId) {
-    if (!canHumanAct()) {
+    if (!canHumanAct() || isRollAnimating()) {
       return;
     }
 
@@ -876,6 +1000,7 @@
 
   function restartGame() {
     clearCpuTimer();
+    clearRollAnimation();
     state.players = setupPlayers(state.mode);
     state.currentPlayerIndex = 0;
     state.turnLog = [];
@@ -896,11 +1021,14 @@
 
   function renderDie(value, index) {
     const player = currentPlayer();
+    const rollEffect = state.rollAnimation;
+    const rolling = Boolean(rollEffect && !rollEffect.held[index] && !rollEffect.stopped[index]);
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `die${state.held[index] ? " is-held" : ""}`;
-    button.disabled = !canHumanAct() || state.rolls === 0;
+    button.className = `die${state.held[index] ? " is-held" : ""}${rolling ? " is-rolling" : ""}`;
+    button.disabled = !canHumanAct() || state.rolls === 0 || isRollAnimating();
     button.dataset.heldLabel = uiText("held");
+    button.style.setProperty("--roll-offset", `${index * 47}ms`);
     button.setAttribute(
       "aria-label",
       formatText(uiText("dieAria"), {
@@ -925,7 +1053,7 @@
   }
 
   function scorePreview(categoryId) {
-    return state.rolls > 0 ? scoreDice(categoryId, state.dice) : "-";
+    return state.rolls > 0 && !isRollAnimating() ? scoreDice(categoryId, state.dice) : "-";
   }
 
   function playerAccentClass(playerId) {
@@ -947,7 +1075,7 @@
   }
 
   function hasGameStarted() {
-    return state.rolls > 0 || state.turnLog.length > 0 || state.gameOver;
+    return state.rolls > 0 || state.turnLog.length > 0 || state.gameOver || isRollAnimating();
   }
 
   function applyGameStartedState() {
@@ -1031,7 +1159,7 @@
     const button = document.createElement("button");
     button.type = "button";
     button.className = `score-button${filled ? " is-filled" : ""}`;
-    button.disabled = filled || state.rolls === 0 || !canHumanAct();
+    button.disabled = filled || state.rolls === 0 || !canHumanAct() || isRollAnimating();
     button.dataset.category = category.id;
     button.textContent = filled ? uiText("setAction") : player.type === "cpu" ? uiText("cpuAction") : uiText("scoreAction");
     button.setAttribute("aria-label", formatText(uiText("scoreAria"), { category: categoryLabel(category.id) }));
@@ -1084,8 +1212,17 @@
     els.remainingCount.textContent = String(totals.remaining);
     els.bonusState.textContent = `${totals.bonus} / 50`;
     els.turnMessage.textContent = currentMessage();
+    const rolling = isRollAnimating();
     els.rollButton.disabled = !canHumanAct() || state.rolls >= 3;
-    els.rollButton.textContent = player.type === "cpu" ? uiText("cpuRolling") : state.rolls === 0 ? uiText("rollDice") : uiText("rollAgain");
+    els.rollButton.classList.toggle("is-rolling", rolling);
+    els.rollButton.setAttribute("aria-busy", String(rolling));
+    els.rollButton.textContent = rolling
+      ? uiText("rollingDice")
+      : player.type === "cpu"
+        ? uiText("cpuRolling")
+        : state.rolls === 0
+          ? uiText("rollDice")
+          : uiText("rollAgain");
     els.restartButton.textContent = uiText("restart");
     els.diceTray.replaceChildren(...state.dice.map((value, index) => renderDie(value, index)));
     renderModeButtons();
@@ -1100,10 +1237,11 @@
   function renderGameToText() {
     const player = currentPlayer();
     const totals = calculateTotals(player.scores);
+    const rolling = isRollAnimating();
     const availableScores = Object.fromEntries(
       categories
         .filter((category) => player.scores[category.id] === null)
-        .map((category) => [category.id, state.rolls > 0 ? scoreDice(category.id, state.dice) : null])
+        .map((category) => [category.id, state.rolls > 0 && !rolling ? scoreDice(category.id, state.dice) : null])
     );
 
     return JSON.stringify({
@@ -1119,6 +1257,7 @@
       dice: state.dice,
       held: state.held,
       rolls: state.rolls,
+      rolling,
       rolls_remaining: Math.max(0, 3 - state.rolls),
       players: state.players.map((entry) => ({
         id: entry.id,
@@ -1156,8 +1295,75 @@
     setLanguage(button.dataset.lang);
   }
 
+  function handleRollPointerDown(event) {
+    if (event.button !== undefined && event.button !== 0) {
+      return;
+    }
+
+    state.rollInput.suppressClickUntil = performance.now() + 600;
+    if (!startHumanRoll()) {
+      return;
+    }
+
+    state.rollInput.pointerId = event.pointerId;
+    if (els.rollButton.setPointerCapture && event.pointerId !== undefined) {
+      try {
+        els.rollButton.setPointerCapture(event.pointerId);
+      } catch {
+        // Some synthetic pointer events are not capturable, but release is also watched on window.
+      }
+    }
+  }
+
+  function handleRollPointerUp(event) {
+    if (state.rollInput.pointerId !== null && event.pointerId !== state.rollInput.pointerId) {
+      return;
+    }
+
+    state.rollInput.suppressClickUntil = performance.now() + 600;
+    releaseHumanRoll();
+  }
+
+  function handleRollKeyDown(event) {
+    if (![" ", "Enter"].includes(event.key) || event.repeat) {
+      return;
+    }
+
+    event.preventDefault();
+    state.rollInput.suppressClickUntil = performance.now() + 600;
+    if (startHumanRoll()) {
+      state.rollInput.key = event.key;
+    }
+  }
+
+  function handleRollKeyUp(event) {
+    if (!state.rollInput.key || event.key !== state.rollInput.key) {
+      return;
+    }
+
+    event.preventDefault();
+    state.rollInput.suppressClickUntil = performance.now() + 600;
+    releaseHumanRoll();
+  }
+
+  function handleRollClick() {
+    if (performance.now() < state.rollInput.suppressClickUntil) {
+      return;
+    }
+
+    rollDice();
+  }
+
   function bindEvents() {
-    els.rollButton.addEventListener("click", rollDice);
+    els.rollButton.addEventListener("pointerdown", handleRollPointerDown);
+    els.rollButton.addEventListener("pointerup", handleRollPointerUp);
+    els.rollButton.addEventListener("pointercancel", handleRollPointerUp);
+    els.rollButton.addEventListener("keydown", handleRollKeyDown);
+    els.rollButton.addEventListener("keyup", handleRollKeyUp);
+    els.rollButton.addEventListener("click", handleRollClick);
+    window.addEventListener("blur", releaseHumanRoll);
+    window.addEventListener("pointerup", handleRollPointerUp);
+    window.addEventListener("pointercancel", handleRollPointerUp);
     els.restartButton.addEventListener("click", restartGame);
     els.modeButtons.forEach((button) => {
       button.addEventListener("click", () => setMode(button.dataset.mode));
